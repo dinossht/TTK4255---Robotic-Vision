@@ -1,0 +1,12 @@
+
+*.zip
+
+Assignments/ex0/.idea/
+
+.idea/
+
+Resources/
+
+Assignments/ex0/.vscode/
+
+Assignments/ex1/.vscode/
