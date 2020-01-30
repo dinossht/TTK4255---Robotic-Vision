@@ -22,9 +22,9 @@ def estimate_H(xy, XY):
         A[r*2, :] = np.array([X, Y, 1, 0, 0, 0, -X*x, -Y*x, -x])
         A[r*2+1, :] = np.array([0, 0, 0, X, Y, 1, -X*y, -Y*y, -y])
 
-    # Obtain the SVD of A (section A4.4(p585)). The unit singular vector 
-    # corresponding to the smallest singular value is the solution h. 
-    # Specifically, if A = UDV T with D diagonal with positive diagonal 
+    # Obtain the SVD of A (section A4.4(p585)). The unit singular vector
+    # corresponding to the smallest singular value is the solution h.
+    # Specifically, if A = UDV T with D diagonal with positive diagonal
     # entries, arranged in descending order down the diagonal, then h
     # is the last column of V.
     _, _, V = np.linalg.svd(A)
@@ -37,8 +37,31 @@ def decompose_H(H):
     #
     # Task 3a: Implement decompose_H
     #
-    T1 = np.eye(4)  # Placeholder code
-    T2 = np.eye(4)  # Placeholder code
+    # Initialize 
+    T1 = np.eye(4)
+    T2 = np.eye(4)
+    # Equation (17)-(18) from assignment
+    # The third column of the rotation matrix is not present,
+    # but if we know two columns, the third can always be
+    # obtained using the cross product
+    lamda = np.linalg.norm(H[:, 0])
+
+    # Extract rotation
+    r1 = H[:, 0] / lamda
+    r2 = H[:, 1] / lamda
+    r3 = np.cross(r1, r2)
+    # Extract translation vector
+    t = H[:, 2] / lamda
+    T1[0:3, 0:4] = np.column_stack((r1, r2, r3, t))
+
+    # Extract rotation
+    r1 = H[:, 0] / -lamda
+    r2 = H[:, 1] / -lamda
+    r3 = np.cross(r1, r2)
+    # Extract translation vector
+    t = H[:, 2] / -lamda
+    T2[0:3, 0:4] = np.column_stack((r1, r2, r3, t))
+
     return T1, T2
 
 
@@ -46,7 +69,10 @@ def choose_solution(T1, T2):
     #
     # Task 3b: Implement choose_solution
     #
-    return T1
+    tz = T1[2, 3]
+    # tz positive means the object that
+    # is seen by the camera is in front of it
+    return T1 if (tz >= 0) else T2
 
 
 K = np.loadtxt('../data/cameraK.txt')
