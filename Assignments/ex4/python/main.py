@@ -6,9 +6,9 @@ all_markers = np.loadtxt('../data/markers.txt')
 m = 7 # Number of markers (not all are detected in each frame)
 
 # Initial estimate
-yaw   = 11.6*np.pi/180;
-pitch = 28.9*np.pi/180;
-roll  = -0.6*np.pi/180;
+yaw   = 11.6*np.pi/180
+pitch = 28.9*np.pi/180
+roll  = -0.6*np.pi/180
 
 # Task 1
 method = gauss_newton
@@ -25,6 +25,7 @@ for image_number in range(last_image + 1):
     weights = markers[:,0] # weight = 1 if marker was detected or 0 otherwise
     uv = markers[:, 1:3]
     if image_number == 0:
+        JTJ, JTr = normal_equations(uv, weights, yaw, pitch, roll)
         r = residuals(uv, weights, yaw, pitch, roll)
         print('Residuals on first image are:', r)
     yaw, pitch, roll = method(uv, weights, yaw, pitch, roll)
