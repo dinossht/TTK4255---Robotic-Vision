@@ -12,7 +12,7 @@ roll  = -0.6*np.pi/180
 
 # Task 1
 method = gauss_newton
-last_image = 86
+last_image = 87
 
 # Task 2
 # method = levenberg_marquardt
