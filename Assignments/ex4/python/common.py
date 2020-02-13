@@ -78,7 +78,6 @@ def gauss_newton(uv, weights, yaw, pitch, roll):
     #
     # Task 1c: Implement the Gauss-Newton method
     #
- 
     max_iter = 100
     step_size = 0.25
     for iter in range(max_iter):
@@ -93,6 +92,54 @@ def levenberg_marquardt(uv, weights, yaw, pitch, roll):
     #
     # Task 2a: Implement the Levenberg-Marquardt method
     #
+    # TODO: add stop condition
+    max_iter = 100
+    step_size = 1
+    D = np.eye(3)
+    beta = 10.0
+    
+    # Initialize lamda, 10^-3 times the average of the diagonal elements of JTJ
+    JTJ, JTr = normal_equations(uv, weights, yaw, pitch, roll)
+    lamda = 1e-3 * np.trace(JTJ) / 3.0
+    prev_delta = np.zeros((3, 1))
+
+    for iter in range(max_iter):
+        # In each iteration, if the value of delta obtained by solving 
+        # (11 from assignment) leads to a reduced error, then the step is 
+        # accepted and lamda is descreased before next iteration
+
+        # Solve normal equation
+        JTJ, JTr = normal_equations(uv, weights, yaw, pitch, roll)
+        delta = np.linalg.solve(JTJ + lamda * D, -JTr)        
+
+        # Calculate residuals for previous and current step        
+        e1 = np.linalg.norm(residuals(uv, weights, yaw + step_size * delta[0], pitch + step_size * delta[1], roll + step_size * delta[2]))
+        e2 = np.linalg.norm(residuals(uv, weights, yaw, pitch, roll)) 
+
+        # If error is reduced, the step is accepted and lamda is decreased
+        if e1 < e2:
+            lamda /= beta 
+ 
+        # If error is increased, the lamda is increased and the normal 
+        # equations are solved again. Repeat until a value of delta that 
+        # leads to reduced error
+        else: 
+            while e1 > e2:
+                lamda *= beta
+                
+                # Solve normal equation                
+                JTJ, JTr = normal_equations(uv, weights, yaw, pitch, roll)
+                delta = np.linalg.solve(JTJ + lamda * D, -JTr) 
+
+                # Calculate residuals for previous and current step        
+                e1 = np.linalg.norm(residuals(uv, weights, yaw + step_size * delta[0], pitch + step_size * delta[1], roll + step_size * delta[2]))
+                e2 = np.linalg.norm(residuals(uv, weights, yaw, pitch, roll))    
+
+        # Step is accepted, forward
+        yaw = yaw + step_size * delta[0]
+        pitch = pitch + step_size * delta[1]
+        roll = roll + step_size * delta[2]   
+                      
     return yaw, pitch, roll
 
 def rotate_x(radians):
