@@ -49,6 +49,8 @@ def normal_equations(uv, weights, yaw, pitch, roll):
     #
     # Task 1b: Compute the normal equation terms
     #
+
+    # Calculate Jacobian using two point finit-difference approximation
     J = np.zeros((7, 3))
     # Delta
     d = 0.01
@@ -76,10 +78,15 @@ def gauss_newton(uv, weights, yaw, pitch, roll):
     #
     # Task 1c: Implement the Gauss-Newton method
     #
+ 
     max_iter = 100
     step_size = 0.25
     for iter in range(max_iter):
-        pass # Placeholder
+        JTJ, JTr = normal_equations(uv, weights, yaw, pitch, roll)
+        delta = np.linalg.solve(JTJ, -JTr)
+        yaw = yaw + step_size * delta[0]
+        pitch = pitch + step_size * delta[1]
+        roll = roll + step_size * delta[2] 
     return yaw, pitch, roll
 
 def levenberg_marquardt(uv, weights, yaw, pitch, roll):
