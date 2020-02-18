@@ -12,12 +12,13 @@ def central_difference(I):
     Im = np.zeros_like(I)
 
     difference_kernel = np.array([0.5, 0, -0.5])
+    # Horizontal convolution
     for r in range(I.shape[0]):
         Iu[r, :] = np.convolve(I[r, :], difference_kernel, mode="same") 
-        
+    # Verticle convolution    
     for c in range(I.shape[1]):
         Iv[:, c] = np.convolve(I[:, c], difference_kernel.T, mode="same") 
-    
+    # Absolute magnitude
     Im = np.sqrt(Iv**2 + Iv**2)
     return Iu, Iv, Im
 
@@ -31,8 +32,18 @@ def blur(I, sigma):
     # Hint: The size of the kernel, w, should depend on sigma, e.g.
     # w=2*np.ceil(3*sigma) + 1. Also, ensure that the blurred image
     # has the same size as the input image.
-
-    result = np.zeros_like(I) # Placeholder
+    kernel_len = 2 * np.ceil(3 * sigma) + 1
+    x = np.linspace(-(kernel_len - 1) / 2., (kernel_len - 1) / 2., kernel_len)
+    gaussian_kernel = np.exp(-x**2. / (2. * sigma**2)) / np.sqrt(2. * np.pi * sigma**2)
+    
+    # Horizontal convolution
+    result = np.zeros_like(I)
+    for r in range(I.shape[0]):
+        result[r, :] = np.convolve(I[r, :], gaussian_kernel, mode="same")
+    # Verticle convolution
+    for c in  range(I.shape[1]):
+        result[:, c] = np.convolve(result[:, c], gaussian_kernel.T, mode="same") 
+    
     return result
 
 # Task 1c
