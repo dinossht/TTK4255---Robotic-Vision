@@ -22,3 +22,5 @@ Assignments/ex3/python/__pycache__/
 Assignments/ex3/.ipynb_checkpoints/
 
 Assignments/ex4/python/__pycache__/
+
+*.pyc

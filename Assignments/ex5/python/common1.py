@@ -7,10 +7,18 @@ def central_difference(I):
     a central difference filter, and returns the resulting
     gradient images (Iu, Iv) and the gradient magnitude Im.
     """
+    Iu = np.zeros_like(I)
+    Iv = np.zeros_like(I)
+    Im = np.zeros_like(I)
 
-    Iu = np.zeros_like(I) # Placeholder
-    Iv = np.zeros_like(I) # Placeholder
-    Im = np.zeros_like(I) # Placeholder
+    difference_kernel = np.array([0.5, 0, -0.5])
+    for r in range(I.shape[0]):
+        Iu[r, :] = np.convolve(I[r, :], difference_kernel, mode="same") 
+        
+    for c in range(I.shape[1]):
+        Iv[:, c] = np.convolve(I[:, c], difference_kernel.T, mode="same") 
+    
+    Im = np.sqrt(Iv**2 + Iv**2)
     return Iu, Iv, Im
 
 # Task 1b
