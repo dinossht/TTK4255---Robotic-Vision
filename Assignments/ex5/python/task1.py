@@ -8,8 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from common1 import *
 
-edge_threshold = # todo: choose an appropriate value
-blur_sigma     = # todo: choose an appropriate value
+edge_threshold = 0.01
+blur_sigma     = 1
 filename       = '../data/image1_und.jpg'
 
 I_rgb      = plt.imread(filename)
