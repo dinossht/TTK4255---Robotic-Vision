@@ -22,6 +22,16 @@ def normalize_points(pts):
     """
 
     # todo: Compute pts_n and T
+    mu = np.mean(pts, axis=0)
+    sigma = np.mean(np.linalg.norm(pts - mu, axis=1))
     pts_n = pts
-    T = np.eye(3)
+
+    s = np.sqrt(2) / sigma
+    T = np.array([
+        [s, 0, -s*mu[0]],
+        [0, s, -s*mu[1]],
+        [0, 0, 1]
+        ])
+    pts_temp = T@np.column_stack((pts, np.ones(len(pts)))).T
+    pts_n = np.divide(pts_temp[0:2], pts_temp[2]).T
     return pts_n, T
