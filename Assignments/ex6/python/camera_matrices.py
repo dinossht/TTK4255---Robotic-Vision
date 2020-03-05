@@ -10,8 +10,7 @@ def camera_matrices(K1, K2, R, t):
     Returns:
         P1,P2: The projection matrices with shape 3x4.
     """
-
-    # todo: compute the correct P1 and P2
-    P1 = np.zeros((3,4))
-    P2 = np.zeros((3,4))
+    # P = K [I 0] and P' = K' [R t]
+    P1 = K1 @ np.block([np.eye(3), np.zeros((3, 1))])
+    P2 = K2 @ np.block([R, t.reshape(3, 1)])
     return P1, P2

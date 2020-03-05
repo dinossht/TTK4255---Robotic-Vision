@@ -16,7 +16,13 @@ def linear_triangulation(uv1, uv2, P1, P2):
 
     See HZ Ch. 12.2: Linear triangulation methods (p312)
     """
-
-    # todo: Compute X
-    X = np.zeros(3)
+    
+    A = np.row_stack((
+        uv1[0] * P1[2, :] - P1[0, :],
+        uv1[1] * P1[2, :] - P1[1, :],
+        uv2[0] * P2[2, :] - P2[0, :],
+        uv2[1] * P2[2, :] - P2[1, :]
+        ))
+    U, S, VT = np.linalg.svd(A)
+    X = VT.T[0:3, -1] / VT.T[3, -1]
     return X
