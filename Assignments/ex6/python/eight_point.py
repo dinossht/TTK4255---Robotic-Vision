@@ -38,24 +38,24 @@ def eight_point(uv1, uv2):
 
     U, S, VT = np.linalg.svd(A)
     F_hat = np.reshape(VT.T[:, -1], (3, 3))
-
-    """
+    
     # (b) Constraint enforcement:
-    U, S, VT = np.linalg.svd(F_hat)
-    S = np.diag(S)
-    S[-1, -1] = 0
-    F_hat_marked = U@S@VT
-    """
+    F_hat = closest_fundamental_matrix(F_hat)
     
     # Denomalization
     F = T2.T@F_hat@T1
     return F
+
 
 def closest_fundamental_matrix(F):
     """
     Computes the closest fundamental matrix in the sense of the
     Frobenius norm. See HZ, Ch. 11.1.1 (p.280).
     """
-
-    # todo: Compute the correct F
+    # HZ Ch. 11.1.1 (p.280) 
+    U, S, VT = np.linalg.svd(F)
+    S = np.diag(S)
+    S[-1, -1] = 0
+    
+    F = U@S@VT
     return F
