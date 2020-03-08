@@ -28,14 +28,16 @@ R,t = choose_solution(uv1, uv2, K1, K2, Rts)
 P1,P2 = camera_matrices(K1, K2, R, t)
 
 # Uncomment for task 4b
-# uv1 = np.loadtxt('../data/goodPoints.txt')
-# uv2 = epipolar_match(rgb2gray(I1), rgb2gray(I2), F, uv1)
+uv1 = np.loadtxt('../data/goodPoints.txt')
+uv2 = epipolar_match(rgb2gray(I1), rgb2gray(I2), F, uv1)
 
 n = len(uv1)
 X = np.array([linear_triangulation(uv1[i], uv2[i], P1, P2) \
     for i in range(n)])
+col_X = np.array([I1[int(uv1[i][1]), int(uv1[i][0])].T for i in range(n)])
 
 show_point_cloud(X,
+    col_X,
     xlim=[-0.6,+0.6],
     ylim=[-0.6,+0.6],
     zlim=[+3.0,+4.2])

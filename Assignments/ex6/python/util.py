@@ -64,7 +64,7 @@ def show_point_matches(I1, I2, uv1, uv2, F=None):
             draw_line(l, linewidth='1', color=colors[i])
     plt.tight_layout()
 
-def show_point_cloud(X, xlim, ylim, zlim):
+def show_point_cloud(X, col_X, xlim, ylim, zlim):
     """
     Creates a mouse-controllable 3D plot of the input points.
     """
@@ -74,7 +74,13 @@ def show_point_cloud(X, xlim, ylim, zlim):
     # This could be changed to use scatter if you want to
     # provide a per-point color. Otherwise, the plot function
     # is much faster.
-    ax.plot(X[:,0], X[:,2], X[:,1], '.')
+    #ax.plot(X[:,0], X[:,2], X[:,1], '.')
+    #    if col_X != 0:
+    ax.scatter(X[:,0], X[:,2], X[:,1], '.', c=col_X)
+    
+    #else:
+    #    ax.scatter(X[:,0], X[:,2], X[:,1])#, '.')
+
 
     ax.set_xlim(xlim)
     ax.set_ylim(zlim)
